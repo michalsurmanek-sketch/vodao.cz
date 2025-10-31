@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VodAO – Voda. Životní energie. Udržitelně.</title>
+  <meta name="description" content="VodAO: portál o vodě, udržitelnosti a chytrém hospodaření s vodou. Produkty, služby, dotace, blog." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700;900&display=swap&subset=latin-ext" rel="stylesheet">
+  <style>
+    :root {
+      --blue-900:#003049; --blue-800:#004b6e; --blue-700:#005f8e; --blue-600:#0077b6; --blue-500:#00a6fb; --blue-400:#00b4d8; --blue-300:#48cae4; --blue-200:#90e0ef; --blue-100:#caf0f8; --white:#ffffff; --black:#0a0a0a; --slate:#0f172a; --muted:#667085; --ring:#00b4d8; --shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#f8fbfd;color:#0b1b2b;font-family:'Lato', 'Roboto', system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;height:auto}
+    /* Header */
+    .topbar{position:sticky;top:0;z-index:1000;background:linear-gradient(90deg,var(--blue-900),var(--blue-700));color:var(--white);box-shadow:0 2px 10px rgba(0,0,0,.15)}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    .row{display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:12px;padding:14px 0}
+    .logo{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:radial-gradient(120% 120% at 30% 30%, var(--blue-400), var(--blue-700));box-shadow:inset 0 0 10px rgba(255,255,255,.25), 0 6px 20px rgba(0,0,0,.2)}
+    .logo svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+    .brand .title{font-weight:900;letter-spacing:.2px}
+    nav.primary{display:flex;gap:20px}
+    nav.primary a{padding:10px 12px;border-radius:10px;opacity:.9}
+    nav.primary a:hover, nav.primary a:focus{background:rgba(255,255,255,.12);opacity:1;outline:2px solid transparent}
+    .cta{display:inline-flex;align-items:center;gap:10px;background:#00b4d8;color:#003049;padding:10px 14px;border-radius:12px;font-weight:800;box-shadow:0 6px 20px rgba(0, 180, 216, .35)}
+    .cta:hover{transform:translateY(-1px)}
+    /* Mobile nav */
+    .hamburger{display:none;flex-direction:column;gap:5px;width:42px;height:42px;border:2px solid rgba(255,255,255,.25);border-radius:12px;align-items:center;justify-content:center;background:transparent}
+    .hamburger span{display:block;width:22px;height:2.5px;background:#fff;border-radius:3px}
+    .mobile-menu{position:fixed;inset:0;background:linear-gradient(180deg,var(--blue-900),var(--blue-700));color:#fff;display:none;flex-direction:column;padding:18px;gap:12px;z-index:1100;overflow:auto}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{display:block;padding:14px 10px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .mobile-menu .close{align-self:flex-end;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:8px 12px;border-radius:10px}
+
+    /* Hero */
+    .hero{position:relative;isolation:isolate;background:linear-gradient(180deg,var(--blue-800),var(--blue-600));color:#fff}
+    .hero-inner{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center;padding:60px 20px}
+    .hero h1{font-size:clamp(28px,6vw,56px);line-height:1.03;margin:0 0 12px;font-weight:900}
+    .hero p{font-size:clamp(16px,2.2vw,20px);opacity:.95;margin:0 0 22px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;font-weight:800;border:2px solid transparent;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+    .btn.primary{background:#00b4d8;color:#003049}
+    .btn.secondary{background:transparent;border-color:rgba(255,255,255,.4);color:#fff}
+    .water-visual{position:relative}
+    .bubble{position:absolute;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(1px);animation:float 10s ease-in-out infinite}
+    .bubble.b1{width:110px;height:110px;left:8%;top:18%;animation-delay:0s}
+    .bubble.b2{width:70px;height:70px;left:58%;top:10%;animation-delay:1.5s}
+    .bubble.b3{width:160px;height:160px;left:40%;top:40%;animation-delay:.8s}
+    @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-18px)}100%{transform:translateY(0)}}
+
+    /* Waves */
+    .waves{position:absolute;bottom:-1px;left:0;width:100%;height:120px;z-index:0}
+    .content{position:relative;z-index:1}
+
+    /* Sections */
+    section{padding:72px 0}
+    .section-title{font-size:clamp(22px,3.4vw,36px);margin:0 0 22px;text-align:center;font-weight:900;color:#0b2b3f}
+    .section-lead{max-width:820px;margin:0 auto 36px;opacity:.8;text-align:center}
+    .grid{display:grid;gap:18px}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    .card{background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:20px;border:1px solid #e8f3f9}
+    .card h3{margin:0 0 10px;font-size:20px}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#e8f7fb;color:#005f8e;font-weight:800;font-size:12px}
+
+    /* CTA band */
+    .cta-band{background:linear-gradient(90deg,var(--blue-700),var(--blue-500));color:#fff;border-radius:22px;padding:26px 22px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow)}
+
+    /* Footer */
+    footer{background:#0b2333;color:#cfe9f6;padding:40px 0 28px}
+    .footer-grid{display:grid;gap:24px;grid-template-columns:2fr 1fr 1fr}
+    .copyright{opacity:.6;font-size:13px;margin-top:20px}
+
+    /* Responsive */
+    @media (max-width: 980px){
+      nav.primary{display:none}
+      .hamburger{display:flex}
+      .hero-inner{grid-template-columns:1fr;gap:26px;padding:48px 20px}
+      .grid.cols-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 640px){
+      .grid.cols-3{grid-template-columns:1fr}
+      .grid.cols-2{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="topbar" role="banner">
+    <div class="container row">
+      <a class="brand" href="#" aria-label="VodAO domů">
+        <span class="logo" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C8 7 5 10.5 5 14.5C5 18.09 8.13401 21 12 21C15.866 21 19 18.09 19 14.5C19 10.5 16 7 12 2Z" fill="white"/>
+            <path d="M12 9.5c-2.2 2.7-3.4 4.3-3.4 5.5 0 1.88 1.52 3.4 3.4 3.4 1.88 0 3.4-1.52 3.4-3.4 0-1.2-1.2-2.8-3.4-5.5Z" fill="#00b4d8"/>
+          </svg>
+        </span>
+        <span class="title">VodAO</span>
+      </a>
+
+      <nav class="primary" aria-label="Hlavní navigace">
+        <a href="#o-vode">O vodě</a>
+        <a href="#produkty">Produkty</a>
+        <a href="#sluzby">Služby</a>
+        <a href="#dotace">Dotace</a>
+        <a href="#blog">Blog</a>
+        <a href="#kontakt" class="cta">Kontakt / Poptávka</a>
+      </nav>
+
+      <button class="hamburger" id="hamburger" aria-label="Otevřít menu" aria-controls="mobileMenu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
+      <button class="close" id="closeMenu" aria-label="Zavřít menu">Zavřít ✕</button>
+      <a href="#o-vode" class="m-link">O vodě</a>
+      <a href="#produkty" class="m-link">Produkty</a>
+      <a href="#sluzby" class="m-link">Služby</a>
+      <a href="#dotace" class="m-link">Dotace</a>
+      <a href="#blog" class="m-link">Blog</a>
+      <a href="#kontakt" class="m-link"><strong>Kontakt / Poptávka</strong></a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner content">
+      <div>
+        <div class="pill" aria-hidden="true">💧 Udržitelně • Chytrá voda • AO</div>
+        <h1>Voda. Životní energie. <span style="opacity:.9">Udržitelně.</span></h1>
+        <p>VodAO propojuje inovace ve vodním hospodářství s praxí. Filtrace, retenční nádrže, zavlažování, projekty a dotace na jednom místě.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#produkty">Prozkoumat produkty</a>
+          <a class="btn secondary" href="#sluzby">Služby & konzultace</a>
+        </div>
+      </div>
+      <div class="water-visual" aria-hidden="true">
+        <div class="bubble b1"></div>
+        <div class="bubble b2"></div>
+        <div class="bubble b3"></div>
+        <svg viewBox="0 0 400 300" width="100%" height="auto">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#90e0ef" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#00b4d8" stop-opacity="0.8"/>
+            </linearGradient>
+          </defs>
+          <path d="M200 20 C 160 90, 120 130, 100 170 C 80 210, 90 260, 200 280 C 310 260, 320 210, 300 170 C 280 130, 240 90, 200 20 Z" fill="url(#g1)"/>
+          <circle cx="150" cy="120" r="18" fill="#caf0f8" opacity="0.7"/>
+          <circle cx="250" cy="150" r="12" fill="#caf0f8" opacity="0.5"/>
+          <circle cx="210" cy="90" r="8" fill="#caf0f8" opacity="0.6"/>
+        </svg>
+      </div>
+    </div>
+    <svg class="waves" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,64L60,53.3C120,43,240,21,360,21.3C480,21,600,43,720,74.7C840,107,960,149,1080,144C1200,139,1320,85,1380,58.7L1440,32L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z" fill="#90e0ef"/>
+      <path d="M0,64L60,80C120,96,240,128,360,117.3C480,107,600,53,720,37.3C840,21,960,43,1080,74.7C1200,107,1320,149,1380,160L1440,171L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z" fill="#caf0f8" opacity="0.9"/>
+    </svg>
+  </section>
+
+  <!-- O vodě -->
+  <section id="o-vode">
+    <div class="container">
+      <h2 class="section-title">O vodě a udržitelnosti</h2>
+      <p class="section-lead">Voda je klíčovým prvkem života. Zaměřujeme se na její <strong>zadržování v krajině</strong>, <strong>efektivní využití v domácnostech</strong> i <strong>čistotu pitné vody</strong>. Spojujeme informace, produkty a služby do jednoho funkčního celku.</p>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>💦 Filtrace a kvalita</h3>
+          <p>Domácí filtry, UV sterilizace, reverzní osmóza, užitková vs. pitná voda, tvrdost a mineralizace.</p>
+        </div>
+        <div class="card">
+          <h3>🌧️ Dešťovka a retence</h3>
+          <p>Retenční nádrže, vsakovací systémy a chytré hospodaření s dešťovou vodou pro dům i zahradu.</p>
+        </div>
+        <div class="card">
+          <h3>🌿 Závlahy a zeleň</h3>
+          <p>Automatické závlahy, kapénkové systémy, zelené střechy a šetrná spotřeba.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Produkty -->
+  <section id="produkty">
+    <div class="container">
+      <h2 class="section-title">Produkty</h2>
+      <p class="section-lead">Ověřené komponenty a sestavy. Vše s podporou a návody.</p>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>Filtrační konvice & systémy</h3>
+          <p>Od jednoduchých konvic po poddřezové filtry s RO membránami. Příslušenství a testery kvality vody.</p>
+        </div>
+        <div class="card">
+          <h3>Retenční nádrže</h3>
+          <p>Podzemní i nadzemní řešení, napojení na WC, pračku i závlahu. Dimenzování na míru objektu.</p>
+        </div>
+        <div class="card">
+          <h3>Čerpadla a automatické závlahy</h3>
+          <p>Čerpadla, řídící jednotky, kapénkové systémy a senzory vlhkosti půdy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Služby -->
+  <section id="sluzby">
+    <div class="container">
+      <h2 class="section-title">Služby</h2>
+      <p class="section-lead">Od konzultace po instalaci. Projektová dokumentace, servis a školení.</p>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>Audit vody v domácnosti</h3>
+          <p>Rozbor spotřeby, návrh úspor a zvýšení kvality vody. Doporučení technologií a návratnosti.</p>
+        </div>
+        <div class="card">
+          <h3>Projekt & instalace</h3>
+          <p>Dimenzování retenčních nádrží a závlah, kompletní montážní služby a revize.</p>
+        </div>
+        <div class="card">
+          <h3>Servis & monitoring</h3>
+          <p>Pravidelná údržba filtrů, monitoring hladiny a dálkové odečty.</p>
+        </div>
+      </div>
+
+      <div class="cta-band" style="margin-top:24px">
+        <strong>Máte projekt? Získejte nezávaznou konzultaci zdarma.</strong>
+        <a class="btn primary" href="#kontakt">Chci konzultaci</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dotace -->
+  <section id="dotace">
+    <div class="container">
+      <h2 class="section-title">Dotace</h2>
+      <p class="section-lead">Aktuální programy pro dešťovou vodu, retenci a úspory. Pomůžeme s administrací a podáním.</p>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>Nová zelená úsporám</h3>
+          <p>Podpora na zadržování a využití dešťové vody, šedé vody a zelené střechy.</p>
+        </div>
+        <div class="card">
+          <h3>Dešťovka (SFŽP / obce)</h3>
+          <p>Obecní a krajské programy. Vyhodnotíme vhodnost a připravíme podklady.</p>
+        </div>
+        <div class="card">
+          <h3>Podnikatelské výzvy</h3>
+          <p>Pro firmy a obce: retenční systémy, modernizace technologií a digitální monitoring.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section id="blog">
+    <div class="container">
+      <h2 class="section-title">Magazín / Blog</h2>
+      <p class="section-lead">Praktické návody, porovnání technologií a inspirace z praxe.</p>
+      <div class="grid cols-3">
+        <article class="card">
+          <h3>Jak dimenzovat retenční nádrž</h3>
+          <p>Jednoduchý vzorec a praktické tipy podle typu střechy, srážek a spotřeby.</p>
+        </article>
+        <article class="card">
+          <h3>RO vs. uhlíkové filtry</h3>
+          <p>Kdy se vyplatí reverzní osmóza a kdy zvolit jednodušší řešení.</p>
+        </article>
+        <article class="card">
+          <h3>Závlaha se senzory vlhkosti</h3>
+          <p>Úspory vody až o desítky procent díky chytré regulaci a datům ze zahrady.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kontakt -->
+  <section id="kontakt">
+    <div class="container">
+      <h2 class="section-title">Kontakt / Poptávka</h2>
+      <p class="section-lead">Napište nám pár detailů. Ozveme se s návrhem řešení a rozpočtem.</p>
+      <div class="grid cols-2">
+        <form class="card" onsubmit="event.preventDefault(); alert('Děkujeme! Vaše zpráva byla odeslána.');">
+          <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px">
+            <div>
+              <label for="name">Jméno</label>
+              <input id="name" name="name" required placeholder="Jméno a příjmení" />
+            </div>
+            <div>
+              <label for="email">E‑mail</label>
+              <input id="email" name="email" type="email" required placeholder="např. jana@firma.cz" />
+            </div>
+            <div style="grid-column:1 / -1">
+              <label for="msg">Zpráva</label>
+              <textarea id="msg" name="message" rows="5" required placeholder="Krátce popište projekt (dům/objekt, plocha střechy, účel vody…)"></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;margin-top:12px">
+            <button class="btn primary" type="submit">Odeslat</button>
+            <span style="font-size:12px;opacity:.7">Odesláním souhlasíte se zpracováním údajů za účelem kontaktu.</span>
+          </div>
+        </form>
+        <div class="card">
+          <h3>Rychlý kontakt</h3>
+          <p><strong>VodAO</strong><br> Uherskohradišťsko / Zlínský kraj<br> E‑mail: info@vodao.cz<br> IČO: doplnit</p>
+          <p><strong>Propojení projektů AO:</strong><br>
+            DomenAO.cz • StartAO.cz • Reklamas.cz • Farmao.cz • PoptějCenu.cz
+          </p>
+          <p>Otevírací doba: Po–Pá 9:00–16:00</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="brand" style="padding:0">
+            <span class="logo" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C8 7 5 10.5 5 14.5C5 18.09 8.13401 21 12 21C15.866 21 19 18.09 19 14.5C19 10.5 16 7 12 2Z" fill="white"/>
+                <path d="M12 9.5c-2.2 2.7-3.4 4.3-3.4 5.5 0 1.88 1.52 3.4 3.4 3.4 1.88 0 3.4-1.52 3.4-3.4 0-1.2-1.2-2.8-3.4-5.5Z" fill="#00b4d8"/>
+              </svg>
+            </span>
+            <span class="title">VodAO</span>
+          </div>
+          <p>Portál o vodě, udržitelnosti a chytrém hospodaření s vodou.</p>
+        </div>
+        <div>
+          <h4>Navigace</h4>
+          <p><a href="#o-vode">O vodě</a><br><a href="#produkty">Produkty</a><br><a href="#sluzby">Služby</a><br><a href="#dotace">Dotace</a><br><a href="#blog">Blog</a><br><a href="#kontakt">Kontakt</a></p>
+        </div>
+        <div>
+          <h4>Právní</h4>
+          <p><a href="#">Obchodní podmínky</a><br><a href="#">Ochrana osobních údajů</a><br><a href="#">Cookies</a></p>
+        </div>
+      </div>
+      <div class="copyright">© <span id="y"></span> VodAO • Všechna práva vyhrazena.</div>
+    </div>
+  </footer>
+
+  <style>
+    /* Form elements (scoped below to avoid reset libraries) */
+    label{display:block;font-weight:700;margin:6px 0 6px}
+    input, textarea{width:100%;padding:12px 12px;border-radius:12px;border:1.5px solid #d8e9f2;background:#f9feff;font-family:inherit;font-size:16px;outline: none;transition:border .2s, box-shadow .2s}
+    input:focus, textarea:focus{border-color:var(--ring);box-shadow:0 0 0 3px rgba(0,180,216,.18)}
+    h4{margin:0 0 10px}
+  </style>
+
+  <script>
+    // Mobile menu toggle (fixed, scrollable, accessible)
+    (function(){
+      const btn = document.getElementById('hamburger');
+      const menu = document.getElementById('mobileMenu');
+      const close = document.getElementById('closeMenu');
+      const links = menu.querySelectorAll('.m-link');
+      function open(){ menu.classList.add('open'); menu.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; }
+      function hide(){ menu.classList.remove('open'); menu.setAttribute('aria-hidden','true'); btn.setAttribute('aria-expanded','false'); document.body.style.overflow='auto'; }
+      btn.addEventListener('click',()=> menu.classList.contains('open') ? hide() : open());
+      close.addEventListener('click', hide);
+      links.forEach(a=> a.addEventListener('click', hide));
+      // Escape key closes
+      window.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && menu.classList.contains('open')) hide(); });
+      // Copyright year
+      document.getElementById('y').textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
