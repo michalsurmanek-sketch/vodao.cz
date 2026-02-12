@@ -1,237 +1,719 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vodnao.cz</title>
-<style>
-/* --- Reset a základní styl --- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vodao.cz – ekosystém pro vše kolem vody</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#020617;
+      --bg2:#0600AB;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.12);
+      --text:#ffffff;
+      --muted: rgba(255,255,255,0.7);
+      --muted2: rgba(255,255,255,0.55);
+      --accent:#0033FF;
+      --accent2:#977DFF;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --glow: 0 0 28px rgba(0,51,255,0.35);
+      --shadow: 0 18px 60px rgba(0,0,0,0.35);
+    }
 
-body {
-  transition: all 0.5s ease;
-  background-color: var(--bg-main);
-  color: var(--text-main);
-}
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Roboto', system-ui, -apple-system, Segoe UI, Arial, sans-serif; }
+    html{ scroll-behavior:smooth; }
+    body{
+      background:
+        radial-gradient(circle at 18% 18%, rgba(0,51,255,0.22), transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(151,125,255,0.18), transparent 52%),
+        linear-gradient(135deg, var(--bg), #000 55%);
+      color: var(--text);
+      overflow-x:hidden;
+    }
 
-/* --- CSS proměnné --- */
-:root {
-  --bg-main: #00003D;
-  --bg-secondary: #0600AB;
-  --accent: #0033FF;
-  --accent-soft: #977DFF;
-  --text-main: #FFFFFF;
-  --card-bg: rgba(255,255,255,0.05);
-  --glow: 0 0 25px #0033FF;
-}
+    .wrap{ max-width:1200px; margin:0 auto; padding: 0 18px; }
 
-/* --- Themes --- */
-.theme-dark {
-  --bg-main: #00003D;
-  --bg-secondary: #0600AB;
-  --accent: #0033FF;
-  --accent-soft: #977DFF;
-  --text-main: #FFFFFF;
-  --card-bg: rgba(255,255,255,0.05);
-  --glow: 0 0 25px #0033FF;
-}
+    /* Header */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 14px 0;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 180px;
+    }
+    .logo{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,51,255,0.55), rgba(151,125,255,0.25));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: var(--glow);
+    }
+    .brand strong{ letter-spacing:0.25px; }
+    .brand .tag{ display:block; font-size:11px; color: var(--muted); margin-top:2px; }
 
-.theme-glass {
-  --bg-main: #0A0F2C;
-  --bg-secondary: #101935;
-  --accent: #977DFF;
-  --accent-soft: #0033FF;
-  --text-main: #EAEAFF;
-  --card-bg: rgba(255,255,255,0.08);
-  --glow: 0 0 35px rgba(151,125,255,0.6);
-}
+    .navLinks{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:flex-end; }
+    .navLinks a{
+      text-decoration:none;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      transition: .18s ease;
+    }
+    .navLinks a:hover{ color: var(--text); border-color: rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); }
 
-.theme-neon {
-  --bg-main: #050510;
-  --bg-secondary: #0D0D2B;
-  --accent: #0033FF;
-  --accent-soft: #977DFF;
-  --text-main: #FFFFFF;
-  --card-bg: rgba(0,51,255,0.08);
-  --glow: 0 0 35px #0033FF;
-}
+    .btn{
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 11px 14px;
+      font-size: 13px;
+      cursor:pointer;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: var(--glow); border-color: rgba(151,125,255,0.35); }
+    .btn:active{ transform: translateY(0) scale(0.99); }
 
-.theme-luxury {
-  --bg-main: #0B0B12;
-  --bg-secondary: #111122;
-  --accent: #977DFF;
-  --accent-soft: #F2E6EE;
-  --text-main: #FFFFFF;
-  --card-bg: rgba(151,125,255,0.08);
-  --glow: 0 0 40px rgba(151,125,255,0.5);
-}
+    .btnPrimary{ background: linear-gradient(135deg, rgba(0,51,255,0.35), rgba(151,125,255,0.18)); }
+    .btnGhost{ background: rgba(255,255,255,0.03); }
 
-/* --- Hero sekce --- */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  background: linear-gradient(135deg, var(--bg-main), var(--bg-secondary), var(--accent));
-  background-size: 400% 400%;
-  animation: gradientMove 15s ease infinite;
-  padding: 0 20px;
-}
+    /* Hero */
+    .hero{
+      padding: 70px 0 26px;
+    }
+    .heroGrid{
+      display:grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    @media (max-width: 980px){
+      .heroGrid{ grid-template-columns: 1fr; }
+    }
 
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+    .heroCard{
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      background: rgba(0,0,0,0.22);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      padding: 22px;
+    }
+    .heroCard::before{
+      content:"";
+      position:absolute;
+      inset:-120px;
+      background: radial-gradient(circle at 30% 30%, rgba(0,51,255,0.28), transparent 55%),
+                  radial-gradient(circle at 70% 60%, rgba(151,125,255,0.22), transparent 60%);
+      filter: blur(10px);
+      opacity: 0.9;
+      pointer-events:none;
+    }
+    .heroCard > *{ position: relative; }
 
-.hero h1 {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  text-shadow: var(--glow);
-}
+    .h1{
+      font-size: 46px;
+      line-height: 1.02;
+      letter-spacing:-0.7px;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #fff, rgba(151,125,255,0.95));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color: transparent;
+    }
+    @media (max-width: 520px){ .h1{ font-size: 38px; } }
 
-.hero p {
-  font-size: 1.5rem;
-  margin-bottom: 30px;
-  text-shadow: 0 0 10px var(--accent-soft);
-}
+    .lead{
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      max-width: 680px;
+    }
 
-.hero button {
-  padding: 15px 40px;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 12px;
-  background: rgba(151,125,255,0.15);
-  color: var(--text-main);
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  box-shadow: var(--glow);
-  transition: all 0.3s ease;
-}
+    .pillRow{ display:flex; flex-wrap:wrap; gap:10px; margin: 14px 0 18px; }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.88);
+      font-size: 12px;
+    }
 
-.hero button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 50px var(--accent);
-}
+    .ctaRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 6px; }
 
-/* --- Sekce služeb --- */
-.services {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 60px 20px;
-  gap: 30px;
-}
+    /* Quick request */
+    .quick{
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      background: rgba(0,0,0,0.22);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+    .quick h2{ font-size: 14px; color: var(--muted); font-weight: 700; letter-spacing:0.2px; }
 
-.card {
-  background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,0.1);
-  width: 250px;
-  padding: 30px;
-  text-align: center;
-  box-shadow: var(--glow);
-  transition: all 0.3s ease;
-}
+    .field{ display:flex; flex-direction:column; gap:6px; }
+    .field label{ font-size: 12px; color: var(--muted2); }
+    .field input, .field select, .field textarea{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      padding: 11px 12px;
+      font-size: 13px;
+      outline:none;
+    }
+    .field textarea{ min-height: 86px; resize: vertical; }
 
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 45px var(--accent-soft);
-}
+    .miniRow{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media (max-width: 520px){ .miniRow{ grid-template-columns: 1fr; } }
 
-.card h3 {
-  margin-bottom: 15px;
-}
+    .hint{ font-size: 12px; color: var(--muted2); line-height:1.45; }
 
-.card p {
-  font-size: 1rem;
-}
+    /* Sections */
+    section{ padding: 26px 0; }
+    .secTitle{
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      letter-spacing: 0.2px;
+    }
 
-/* --- Přepínač stylů --- */
-.theme-switcher {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 10px;
-}
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 12px;
+    }
+    @media (max-width: 980px){ .cards{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width: 520px){ .cards{ grid-template-columns: 1fr; } }
 
-.theme-switcher button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background: var(--card-bg);
-  color: var(--text-main);
-  box-shadow: var(--glow);
-  transition: all 0.3s ease;
-}
+    .card{
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      border-radius: 18px;
+      padding: 14px;
+      transition: .18s ease;
+    }
+    .card:hover{ transform: translateY(-2px); box-shadow: var(--glow); border-color: rgba(151,125,255,0.35); }
+    .card h3{ font-size: 14px; margin-bottom: 6px; }
+    .card p{ font-size: 12px; color: var(--muted); line-height: 1.5; }
 
-.theme-switcher button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 35px var(--accent);
-}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+      padding: 8px 10px;
+      border-radius: 999px;
+    }
 
-</style>
+    .steps{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+    }
+    @media (max-width: 980px){ .steps{ grid-template-columns: 1fr; } }
+
+    .step{
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+      border-radius: 18px;
+      padding: 16px;
+    }
+    .step .n{
+      width: 26px; height: 26px;
+      border-radius: 10px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background: rgba(0,51,255,0.25);
+      border: 1px solid rgba(0,51,255,0.35);
+      margin-bottom: 10px;
+      box-shadow: var(--glow);
+      font-weight:700;
+      font-size: 12px;
+    }
+    .step h4{ font-size: 14px; margin-bottom: 6px; }
+    .step p{ font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+    footer{
+      padding: 26px 0 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.24);
+      margin-top: 20px;
+    }
+    .footGrid{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footGrid p{ color: var(--muted); font-size: 12px; line-height: 1.6; max-width: 620px; }
+
+    /* Modal */
+    .overlay{
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(10px);
+      opacity:0; pointer-events:none;
+      transition: .2s ease;
+      z-index: 2000;
+    }
+    .overlay.active{ opacity:1; pointer-events:auto; }
+    .modal{
+      width: min(92vw, 560px);
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.40);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      position: relative;
+    }
+    .modal h3{ font-size: 16px; margin-bottom: 10px; color: rgba(255,255,255,0.92); }
+    .modal .close{
+      position:absolute;
+      top: 10px; right: 12px;
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer;
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: min(420px, calc(100vw - 36px));
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--glow);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events:none;
+      transition: .25s ease;
+      color: rgba(255,255,255,0.92);
+      font-size:13px;
+      z-index: 999;
+    }
+    .toast.show{ opacity:1; transform: translateY(0px); }
+
+    /* Service color chips */
+    .sRozbor{ border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.08); }
+    .sFiltrace{ border-color: rgba(34,197,94,0.35); background: rgba(34,197,94,0.08); }
+    .sBazen{ border-color: rgba(168,85,247,0.35); background: rgba(168,85,247,0.08); }
+    .sInst{ border-color: rgba(236,72,153,0.35); background: rgba(236,72,153,0.08); }
+    .sStudna{ border-color: rgba(56,189,248,0.35); background: rgba(56,189,248,0.08); }
+    .sRozvoz{ border-color: rgba(163,230,53,0.35); background: rgba(163,230,53,0.08); }
+  </style>
 </head>
-<body class="theme-dark">
+<body>
 
-<!-- Přepínač stylů -->
-<div class="theme-switcher">
-  <button onclick="setTheme('theme-dark')">🌙 Dark</button>
-  <button onclick="setTheme('theme-glass')">🧊 Glass</button>
-  <button onclick="setTheme('theme-neon')">✨ Neon</button>
-  <button onclick="setTheme('theme-luxury')">💎 Luxury</button>
-</div>
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <strong>Vodao.cz</strong>
+            <span class="tag">„voda“ • služby • firmy • poptávky</span>
+          </div>
+        </div>
 
-<!-- Hero sekce -->
-<section class="hero">
-  <h1>💧 Vodnao.cz</h1>
-  <p>Vše kolem vody na jednom místě — rozbory, filtrace, bazény, studny, instalatéři</p>
-  <button>Zadat poptávku zdarma</button>
-</section>
+        <div class="navLinks">
+          <a href="#sluzby">Služby</a>
+          <a href="#jak">Jak to funguje</a>
+          <a href="#firmy">Firmy (demo)</a>
+          <a class="btn btnGhost" href="vodnao-admin-dashboard.html" title="Admin panel">Admin</a>
+          <button class="btn btnPrimary" id="btnOpenModal">Zadat poptávku</button>
+        </div>
+      </div>
+    </div>
+  </header>
 
-<!-- Sekce služeb -->
-<section class="services">
-  <div class="card">
-    <h3>Rozbory vody</h3>
-    <p>Zjistěte kvalitu vody ve vaší studni či domácnosti.</p>
+  <main class="wrap">
+
+    <section class="hero" id="top">
+      <div class="heroGrid">
+
+        <div class="heroCard">
+          <h1 class="h1">Budoucnost práce s&nbsp;vodou.</h1>
+          <p class="lead">
+            Vodao propojuje lidi, firmy a služby kolem vody do jednoho ekosystému.
+            Zadáš poptávku za 30 sekund – a administrace (lead panel) ji hned uvidí.
+          </p>
+
+          <div class="pillRow">
+            <span class="pill sRozbor">🧪 Rozbor vody</span>
+            <span class="pill sFiltrace">💧 Filtrace</span>
+            <span class="pill sStudna">🕳️ Studna</span>
+            <span class="pill sInst">🔧 Instalatér</span>
+            <span class="pill sRozvoz">🚚 Rozvoz</span>
+            <span class="pill sBazen">🏊 Bazén</span>
+          </div>
+
+          <div class="ctaRow">
+            <button class="btn btnPrimary" id="btnQuick" title="Okamžitě vytvoří lead">Chci vodu teď (rychle)</button>
+            <button class="btn" id="btnToServices">Vybrat službu</button>
+            <a class="btn btnGhost" href="vodnao-admin-dashboard.html">Otevřít admin</a>
+          </div>
+
+          <div style="margin-top:14px; display:flex; flex-wrap:wrap; gap:10px;">
+            <span class="badge">✅ MVP: sběr poptávek</span>
+            <span class="badge">✅ Admin: filtry + stavy + export</span>
+            <span class="badge">🧠 Připraveno na DB + notifikace</span>
+          </div>
+        </div>
+
+        <div class="quick" aria-label="Rychlá poptávka">
+          <h2>Rychlá poptávka</h2>
+
+          <div class="field">
+            <label>Služba</label>
+            <select id="qService">
+              <option>Rozbor vody</option>
+              <option>Filtrace vody</option>
+              <option>Bazén / Wellness</option>
+              <option>Instalatér</option>
+              <option>Studna</option>
+              <option>Rozvoz vody</option>
+            </select>
+          </div>
+
+          <div class="miniRow">
+            <div class="field">
+              <label>Lokalita</label>
+              <input id="qLocation" placeholder="Např. Brno" />
+            </div>
+            <div class="field">
+              <label>Kontakt</label>
+              <input id="qContact" placeholder="Email nebo telefon" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Popis</label>
+            <textarea id="qNote" placeholder="Co potřebujete vyřešit…"></textarea>
+          </div>
+
+          <button class="btn btnPrimary" id="btnSubmitQuick">Odeslat (uloží se do adminu)</button>
+          <div class="hint">Pozn.: V MVP se data ukládají do <b>localStorage</b>. Později to přepojíme na databázi (Supabase) bez změny UI.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="sluzby">
+      <div class="secTitle">Služby (MVP moduly)</div>
+      <div class="cards">
+        <div class="card" onclick="openModal('Rozbor vody')">
+          <h3>🧪 Rozbor vody</h3>
+          <p>Rychlé zadání rozboru, výstup + doporučení filtrace.</p>
+        </div>
+        <div class="card" onclick="openModal('Filtrace vody')">
+          <h3>💧 Filtrace vody</h3>
+          <p>Filtry do domu/bytu, změkčení, UV, reverzní osmóza.</p>
+        </div>
+        <div class="card" onclick="openModal('Studna')">
+          <h3>🕳️ Studna</h3>
+          <p>Vrtané/kopané studny, povolení, konzultace, realizace.</p>
+        </div>
+        <div class="card" onclick="openModal('Instalatér')">
+          <h3>🔧 Instalatér</h3>
+          <p>Havárie, bojler, rozvody, ventily, tlak, opravy.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="jak">
+      <div class="secTitle">Jak to funguje</div>
+      <div class="steps">
+        <div class="step">
+          <div class="n">1</div>
+          <h4>Zadáš poptávku</h4>
+          <p>Vybereš službu, napíšeš lokalitu a kontakt. Hotovo. (30 s)</p>
+        </div>
+        <div class="step">
+          <div class="n">2</div>
+          <h4>Admin ji uvidí</h4>
+          <p>V admin panelu je filtr, stav (Nové/Hotovo/Archiv) a export CSV.</p>
+        </div>
+        <div class="step">
+          <div class="n">3</div>
+          <h4>Další krok = automatizace</h4>
+          <p>Napojíme databázi, přidáme firmy + přiřazování + notifikace.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="firmy">
+      <div class="secTitle">Firmy (demo ukázka katalogu)</div>
+      <div class="cards">
+        <div class="card">
+          <h3>HydroPro Brno</h3>
+          <p><span class="badge sFiltrace">Filtrace</span> <span class="badge sRozbor">Rozbor</span></p>
+          <p style="margin-top:10px">Reakce: do 2 hodin • Region: Jihomoravský</p>
+        </div>
+        <div class="card">
+          <h3>StudnaFast Zlín</h3>
+          <p><span class="badge sStudna">Studny</span> <span class="badge sRozbor">Rozbor</span></p>
+          <p style="margin-top:10px">Reakce: do 24 hodin • Region: Zlínský</p>
+        </div>
+        <div class="card">
+          <h3>Instal+ Praha</h3>
+          <p><span class="badge sInst">Instalatér</span></p>
+          <p style="margin-top:10px">Havárie: non‑stop • Region: Praha</p>
+        </div>
+        <div class="card">
+          <h3>OfficeWater Ostrava</h3>
+          <p><span class="badge sRozvoz">Rozvoz</span></p>
+          <p style="margin-top:10px">Smluvní rozvozy • Region: Moravskoslezský</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footGrid">
+        <div>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+              <strong>Vodao.cz</strong>
+              <div class="tag" style="color:var(--muted)">MVP demo • lead systém • admin panel</div>
+            </div>
+          </div>
+          <p>
+            Tohle je MVP ukázka – sběr poptávek funguje a admin panel je připravený.
+            Další fáze: firmy, přiřazování leadů, notifikace, platby.
+          </p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <a class="btn btnGhost" href="#top">Nahoru</a>
+          <a class="btn btnGhost" href="vodnao-admin-dashboard.html">Admin</a>
+          <button class="btn btnPrimary" id="btnOpenModal2">Zadat poptávku</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal (detailní poptávka) -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Zadat poptávku">
+      <div class="close" id="btnClose" title="Zavřít">✕</div>
+      <h3>Zadat poptávku</h3>
+
+      <div class="field">
+        <label>Typ služby</label>
+        <select id="mService">
+          <option>Rozbor vody</option>
+          <option>Filtrace vody</option>
+          <option>Bazén / Wellness</option>
+          <option>Instalatér</option>
+          <option>Studna</option>
+          <option>Rozvoz vody</option>
+        </select>
+      </div>
+
+      <div class="miniRow">
+        <div class="field">
+          <label>Lokalita</label>
+          <input id="mLocation" placeholder="Např. Brno" />
+        </div>
+        <div class="field">
+          <label>Kontakt</label>
+          <input id="mContact" placeholder="Email nebo telefon" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Popis</label>
+        <textarea id="mNote" placeholder="Co přesně potřebujete…"></textarea>
+      </div>
+
+      <button class="btn btnPrimary" id="btnSubmitModal">Odeslat poptávku</button>
+      <div class="hint" style="margin-top:8px">Po odeslání se poptávka objeví v admin panelu jako <b>Nové</b>.</div>
+    </div>
   </div>
-  <div class="card">
-    <h3>Filtrace vody</h3>
-    <p>Prémiové filtrační systémy pro domácnosti i firmy.</p>
-  </div>
-  <div class="card">
-    <h3>Bazény & Wellness</h3>
-    <p>Servis, úprava a péče o vaše bazény a vířivky.</p>
-  </div>
-  <div class="card">
-    <h3>Instalatéři</h3>
-    <p>Spolehliví profesionálové pro všechny vodoinstalační práce.</p>
-  </div>
-</section>
 
-<script>
-// --- Funkce pro přepínání stylů ---
-function setTheme(themeName) {
-  document.body.className = themeName;
-  localStorage.setItem("theme", themeName);
-}
+  <div class="toast" id="toast"></div>
 
-// načtení uloženého stylu
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme) {
-  document.body.className = savedTheme;
-}
-</script>
+  <script>
+    // ============ Storage (společné s adminem) ============
+    const LS_KEY = 'vodnao_leads';
 
+    function normalizeLeads(raw){
+      const now = Date.now();
+      return (Array.isArray(raw) ? raw : []).map((l, i) => {
+        const createdAt = (typeof l.createdAt === 'number') ? l.createdAt : now - (raw.length - i) * 60000;
+        const status = (l.status === 'done' || l.status === 'archived' || l.status === 'new') ? l.status : 'new';
+        const dateStr = (typeof l.date === 'string' && l.date.trim()) ? l.date : new Date(createdAt).toLocaleString('cs-CZ');
+        return {
+          service: String(l.service || 'Rozbor vody'),
+          location: String(l.location || ''),
+          contact: String(l.contact || ''),
+          note: String(l.note || ''),
+          date: dateStr,
+          status,
+          createdAt,
+        };
+      });
+    }
+
+    function readLeads(){
+      const raw = JSON.parse(localStorage.getItem(LS_KEY) || '[]');
+      const norm = normalizeLeads(raw);
+      localStorage.setItem(LS_KEY, JSON.stringify(norm));
+      return norm;
+    }
+
+    function writeLeads(leads){
+      localStorage.setItem(LS_KEY, JSON.stringify(leads));
+    }
+
+    function toast(msg){
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(() => el.classList.remove('show'), 2200);
+    }
+
+    // ============ Lead creation ============
+    function createLead({service, location, contact, note}){
+      const createdAt = Date.now();
+      const lead = {
+        service: String(service || 'Rozbor vody'),
+        location: String(location || ''),
+        contact: String(contact || ''),
+        note: String(note || ''),
+        date: new Date(createdAt).toLocaleString('cs-CZ'),
+        status: 'new',
+        createdAt,
+      };
+
+      if(!lead.contact.trim()){
+        toast('Doplň kontakt (email nebo telefon)');
+        return false;
+      }
+
+      const leads = readLeads();
+      leads.unshift(lead); // nové vždy nahoru
+      writeLeads(leads);
+      toast('Poptávka odeslána ✅ (uvidíš ji v adminu)');
+      return true;
+    }
+
+    // ============ Modal ============
+    const overlay = document.getElementById('overlay');
+    function openModal(service){
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden','false');
+      if(service){
+        const mService = document.getElementById('mService');
+        mService.value = service;
+      }
+      setTimeout(() => document.getElementById('mContact').focus(), 50);
+    }
+    function closeModal(){
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden','true');
+    }
+
+    // ============ Wiring ============
+    document.getElementById('btnOpenModal').addEventListener('click', () => openModal());
+    document.getElementById('btnOpenModal2').addEventListener('click', () => openModal());
+    document.getElementById('btnClose').addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
+    window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+
+    document.getElementById('btnToServices').addEventListener('click', () => {
+      document.getElementById('sluzby').scrollIntoView({behavior:'smooth'});
+    });
+
+    document.getElementById('btnSubmitModal').addEventListener('click', () => {
+      const ok = createLead({
+        service: document.getElementById('mService').value,
+        location: document.getElementById('mLocation').value,
+        contact: document.getElementById('mContact').value,
+        note: document.getElementById('mNote').value,
+      });
+      if(ok){
+        document.getElementById('mLocation').value = '';
+        document.getElementById('mContact').value = '';
+        document.getElementById('mNote').value = '';
+        closeModal();
+      }
+    });
+
+    document.getElementById('btnSubmitQuick').addEventListener('click', () => {
+      const ok = createLead({
+        service: document.getElementById('qService').value,
+        location: document.getElementById('qLocation').value,
+        contact: document.getElementById('qContact').value,
+        note: document.getElementById('qNote').value,
+      });
+      if(ok){
+        document.getElementById('qLocation').value = '';
+        document.getElementById('qContact').value = '';
+        document.getElementById('qNote').value = '';
+      }
+    });
+
+    // Rychlé tlačítko „Chci vodu teď“ – vytvoří lead s minimem polí.
+    document.getElementById('btnQuick').addEventListener('click', () => {
+      // Preferujeme rychlý modal s už předvyplněnou službou.
+      openModal(document.getElementById('qService').value || 'Rozvoz vody');
+      document.getElementById('mNote').value = 'URGENT: potřebuji kontaktovat co nejdřív.';
+    });
+
+    // Expose for inline cards
+    window.openModal = openModal;
+
+    // Init: sjednotit data (když někdo už testoval admin)
+    readLeads();
+  </script>
 </body>
 </html>
