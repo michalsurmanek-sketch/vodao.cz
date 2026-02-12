@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vodnao.cz – Firmy (katalog)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#020617;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.12);
+      --text:#ffffff;
+      --muted: rgba(255,255,255,0.7);
+      --muted2: rgba(255,255,255,0.55);
+      --accent:#0033FF;
+      --accent2:#977DFF;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --glow: 0 0 28px rgba(0,51,255,0.35);
+      --shadow: 0 18px 60px rgba(0,0,0,0.35);
+    }
+
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Roboto', system-ui, -apple-system, Segoe UI, Arial, sans-serif; }
+    html{ scroll-behavior:smooth; }
+    body{
+      background:
+        radial-gradient(circle at 18% 18%, rgba(0,51,255,0.22), transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(151,125,255,0.18), transparent 52%),
+        linear-gradient(135deg, var(--bg), #000 55%);
+      color: var(--text);
+      overflow-x:hidden;
+    }
+    .wrap{ max-width:1200px; margin:0 auto; padding: 0 18px; }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 14px 0;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 180px;
+    }
+    .logo{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,51,255,0.55), rgba(151,125,255,0.25));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: var(--glow);
+    }
+    .brand strong{ letter-spacing:0.25px; }
+    .brand .tag{ display:block; font-size:11px; color: var(--muted); margin-top:2px; }
+
+    .navLinks{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .navLinks a{
+      text-decoration:none;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      transition: .18s ease;
+    }
+    .navLinks a:hover{ color: var(--text); border-color: rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); }
+
+    .btn{
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 11px 14px;
+      font-size: 13px;
+      cursor:pointer;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: var(--glow); border-color: rgba(151,125,255,0.35); }
+    .btn:active{ transform: translateY(0) scale(0.99); }
+    .btnPrimary{ background: linear-gradient(135deg, rgba(0,51,255,0.35), rgba(151,125,255,0.18)); }
+    .btnGhost{ background: rgba(255,255,255,0.03); }
+    .btnDanger{ background: rgba(239,68,68,0.14); border-color: rgba(239,68,68,0.35); }
+
+    main{ padding: 26px 0 34px; }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+    @media (max-width: 980px){ .hero{ grid-template-columns: 1fr; } }
+
+    .heroCard{
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      background: rgba(0,0,0,0.22);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      padding: 18px;
+    }
+    .heroCard::before{
+      content:"";
+      position:absolute;
+      inset:-120px;
+      background: radial-gradient(circle at 30% 30%, rgba(0,51,255,0.28), transparent 55%),
+                  radial-gradient(circle at 70% 60%, rgba(151,125,255,0.22), transparent 60%);
+      filter: blur(10px);
+      opacity: 0.9;
+      pointer-events:none;
+    }
+    .heroCard > *{ position: relative; }
+
+    .h1{
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing:-0.5px;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #fff, rgba(151,125,255,0.95));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color: transparent;
+    }
+    .lead{ color: var(--muted); font-size: 14px; line-height: 1.65; }
+
+    .panel{
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      background: rgba(0,0,0,0.22);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+    input[type="search"], select{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      padding: 11px 12px;
+      font-size: 13px;
+      outline:none;
+    }
+    input[type="search"]{ min-width: 260px; width: min(520px, 100%); }
+
+    .kpis{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 12px; }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+      padding: 8px 10px;
+      border-radius: 999px;
+      white-space:nowrap;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      border-radius: 18px;
+      padding: 14px;
+      transition: .18s ease;
+      cursor:pointer;
+      position: relative;
+      overflow:hidden;
+    }
+    .card:hover{ transform: translateY(-2px); box-shadow: var(--glow); border-color: rgba(151,125,255,0.35); }
+    .card h3{ font-size: 14px; margin-bottom: 6px; }
+    .card p{ font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 10px; }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.88);
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      padding: 7px 10px;
+      border-radius: 999px;
+      white-space:nowrap;
+    }
+
+    .mini{ font-size: 12px; color: var(--muted2); }
+
+    /* Service color */
+    .sRozbor{ border-color: rgba(245,158,11,0.35); background: rgba(245,158,11,0.08); }
+    .sFiltrace{ border-color: rgba(34,197,94,0.35); background: rgba(34,197,94,0.08); }
+    .sBazen{ border-color: rgba(168,85,247,0.35); background: rgba(168,85,247,0.08); }
+    .sInst{ border-color: rgba(236,72,153,0.35); background: rgba(236,72,153,0.08); }
+    .sStudna{ border-color: rgba(56,189,248,0.35); background: rgba(56,189,248,0.08); }
+    .sRozvoz{ border-color: rgba(163,230,53,0.35); background: rgba(163,230,53,0.08); }
+
+    /* Modal */
+    .overlay{
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(10px);
+      opacity:0; pointer-events:none;
+      transition: .2s ease;
+      z-index: 2000;
+    }
+    .overlay.active{ opacity:1; pointer-events:auto; }
+    .modal{
+      width: min(92vw, 720px);
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.40);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      position: relative;
+    }
+    .modal h3{ font-size: 16px; margin-bottom: 10px; color: rgba(255,255,255,0.92); }
+    .modal .close{
+      position:absolute;
+      top: 10px; right: 12px;
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer;
+    }
+
+    .modalGrid{ display:grid; grid-template-columns: 1fr 0.9fr; gap: 12px; }
+    @media (max-width: 980px){ .modalGrid{ grid-template-columns: 1fr; } }
+
+    .box{
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .field{ display:flex; flex-direction:column; gap:6px; }
+    .field label{ font-size: 12px; color: var(--muted2); }
+    .field input, .field textarea, .field select{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      padding: 11px 12px;
+      font-size: 13px;
+      outline:none;
+    }
+    textarea{ min-height: 88px; resize: vertical; }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: min(420px, calc(100vw - 36px));
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--glow);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events:none;
+      transition: .25s ease;
+      color: rgba(255,255,255,0.92);
+      font-size:13px;
+      z-index: 999;
+    }
+    .toast.show{ opacity:1; transform: translateY(0px); }
+
+    footer{
+      padding: 26px 0 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.24);
+      margin-top: 20px;
+    }
+    .foot{ display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .foot p{ color: var(--muted); font-size: 12px; line-height: 1.6; max-width: 760px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <strong>Vodnao.cz</strong>
+            <span class="tag">Katalog firem • filtry • poptávka přímo firmě</span>
+          </div>
+        </div>
+
+        <div class="navLinks">
+          <a href="vodnao-index.html">Domů</a>
+          <a class="btn btnGhost" href="vodnao-admin-dashboard.html">Admin</a>
+          <button class="btn btnPrimary" id="btnSeed">Nahrát DEMO firmy</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <div class="hero">
+      <div class="heroCard">
+        <div class="h1">Firmy na vodu – rychle, přehledně, férově.</div>
+        <p class="lead">Vyfiltruj službu a region. Klikni na firmu a pošli jí poptávku jedním klikem. V MVP se poptávky ukládají do stejného lead systému jako na hlavní stránce.</p>
+        <div class="kpis" style="margin-top:12px">
+          <span class="badge">✅ Filtry</span>
+          <span class="badge">✅ Detail firmy (modal)</span>
+          <span class="badge">✅ Poptávka přímo firmě (demo)</span>
+          <span class="badge">🧠 Připraveno na hodnocení + ověření</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="filters">
+          <input id="q" type="search" placeholder="Hledat firmu (název / město / region)…" />
+          <select id="fService">
+            <option value="">Služba: všechny</option>
+            <option>Rozbor vody</option>
+            <option>Filtrace vody</option>
+            <option>Bazén / Wellness</option>
+            <option>Instalatér</option>
+            <option>Studna</option>
+            <option>Rozvoz vody</option>
+          </select>
+          <select id="fRegion">
+            <option value="">Region: všechny</option>
+            <option>Jihomoravský</option>
+            <option>Zlínský</option>
+            <option>Praha</option>
+            <option>Moravskoslezský</option>
+            <option>Plzeňský</option>
+            <option>Olomoucký</option>
+          </select>
+          <select id="fSort">
+            <option value="rating">Řazení: hodnocení</option>
+            <option value="fast">Řazení: nejrychlejší reakce</option>
+            <option value="name">Řazení: název A→Z</option>
+          </select>
+          <button class="btn btnGhost" id="btnReset">Reset</button>
+          <button class="btn btnDanger" id="btnClear" title="Smaže demo firmy (localStorage)">Smazat firmy</button>
+        </div>
+
+        <div class="kpis" style="margin-top:12px">
+          <span class="badge">Firmy: <b id="kFirm">0</b></span>
+          <span class="badge">Zobrazeno: <b id="kView">0</b></span>
+          <span class="badge">Leadů v systému: <b id="kLeads">0</b></span>
+        </div>
+
+        <div class="mini" style="margin-top:10px">Tip: Klikni na firmu → <b>Poslat poptávku</b> (přidá lead s přiřazenou firmou).</div>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot">
+        <p>
+          Další upgrade pro „hotový projekt“: ověření firem, reálné hodnocení, dostupnost (kalendář), okamžité notifikace a přiřazování leadů podle lokality.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn btnGhost" href="vodnao-index.html">Domů</a>
+          <a class="btn btnGhost" href="vodnao-admin-dashboard.html">Admin</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firm modal -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Detail firmy">
+      <div class="close" id="btnClose" title="Zavřít">✕</div>
+      <div class="modalGrid">
+        <div class="box">
+          <h3 id="mName">Firma</h3>
+          <div class="mini" id="mMeta" style="margin:6px 0 10px"></div>
+          <div class="row" id="mServices"></div>
+          <div class="mini" id="mDesc" style="margin-top:10px; line-height:1.6"></div>
+          <div class="row" style="margin-top:12px">
+            <span class="badge">Hodnocení: <b id="mRating">0.0</b>/5</span>
+            <span class="badge">Reakce: <b id="mSla">–</b></span>
+            <span class="badge">Ověřená: <b id="mVerify">–</b></span>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>Poslat poptávku této firmě</h3>
+          <div class="mini" style="margin:6px 0 10px">V MVP se poptávka uloží do lead systému a admin ji uvidí jako <b>Nové</b>.</div>
+
+          <div class="field">
+            <label>Typ služby</label>
+            <select id="lService">
+              <option>Rozbor vody</option>
+              <option>Filtrace vody</option>
+              <option>Bazén / Wellness</option>
+              <option>Instalatér</option>
+              <option>Studna</option>
+              <option>Rozvoz vody</option>
+            </select>
+          </div>
+
+          <div class="field" style="margin-top:10px">
+            <label>Lokalita</label>
+            <input id="lLocation" placeholder="Např. Brno" />
+          </div>
+
+          <div class="field" style="margin-top:10px">
+            <label>Kontakt</label>
+            <input id="lContact" placeholder="Email nebo telefon" />
+          </div>
+
+          <div class="field" style="margin-top:10px">
+            <label>Popis</label>
+            <textarea id="lNote" placeholder="Co potřebujete vyřešit…"></textarea>
+          </div>
+
+          <button class="btn btnPrimary" id="btnSend" style="margin-top:10px">Odeslat poptávku</button>
+          <div class="mini" style="margin-top:10px">Uloží se i info o firmě (ID) – později z toho uděláme přiřazení a notifikaci firmě.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ====== Storage keys ======
+    const LS_FIRMS = 'vodnao_firms';
+    const LS_LEADS = 'vodnao_leads';
+
+    // ====== Helpers ======
+    function toast(msg){
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(() => el.classList.remove('show'), 2200);
+    }
+
+    function readJSON(key, fallback){
+      try{ return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+      catch{ return fallback; }
+    }
+    function writeJSON(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+
+    function normalizeLeads(raw){
+      const now = Date.now();
+      return (Array.isArray(raw) ? raw : []).map((l, i) => {
+        const createdAt = (typeof l.createdAt === 'number') ? l.createdAt : now - (raw.length - i) * 60000;
+        const status = (l.status === 'done' || l.status === 'archived' || l.status === 'new') ? l.status : 'new';
+        const dateStr = (typeof l.date === 'string' && l.date.trim()) ? l.date : new Date(createdAt).toLocaleString('cs-CZ');
+        return {
+          service: String(l.service || 'Rozbor vody'),
+          location: String(l.location || ''),
+          contact: String(l.contact || ''),
+          note: String(l.note || ''),
+          date: dateStr,
+          status,
+          createdAt,
+          // Extra pole navíc (admin je ignoruje, ale zachová)
+          assignedFirmId: (typeof l.assignedFirmId === 'string') ? l.assignedFirmId : '',
+          assignedFirmName: (typeof l.assignedFirmName === 'string') ? l.assignedFirmName : '',
+        };
+      });
+    }
+
+    function readLeads(){
+      const raw = readJSON(LS_LEADS, []);
+      const norm = normalizeLeads(raw);
+      writeJSON(LS_LEADS, norm);
+      return norm;
+    }
+
+    function createLead({service, location, contact, note, assignedFirm}){
+      const createdAt = Date.now();
+      const lead = {
+        service: String(service || 'Rozbor vody'),
+        location: String(location || ''),
+        contact: String(contact || ''),
+        note: String(note || ''),
+        date: new Date(createdAt).toLocaleString('cs-CZ'),
+        status: 'new',
+        createdAt,
+        assignedFirmId: assignedFirm?.id || '',
+        assignedFirmName: assignedFirm?.name || '',
+      };
+      if(!lead.contact.trim()){
+        toast('Doplň kontakt (email nebo telefon)');
+        return false;
+      }
+      const leads = readLeads();
+      leads.unshift(lead);
+      writeJSON(LS_LEADS, leads);
+      updateKpis();
+      toast('Poptávka odeslána ✅ (uvidíš ji v adminu)');
+      return true;
+    }
+
+    // ====== Demo firms ======
+    function demoFirms(){
+      return [
+        {
+          id:'hydropro-brno',
+          name:'HydroPro Brno',
+          city:'Brno',
+          region:'Jihomoravský',
+          services:['Filtrace vody','Rozbor vody'],
+          rating:4.8,
+          responseMin: 120,
+          verified:true,
+          desc:'Specialisté na filtraci do domu, rozbory a řešení tvrdé vody. Doporučíme sestavu podle výsledků rozboru.'
+        },
+        {
+          id:'studnafast-zlin',
+          name:'StudnaFast Zlín',
+          city:'Zlín',
+          region:'Zlínský',
+          services:['Studna','Rozbor vody'],
+          rating:4.6,
+          responseMin: 1440,
+          verified:true,
+          desc:'Vrtané i kopané studny, konzultace, povolení. Umíme i rozbor a následné řešení kvality vody.'
+        },
+        {
+          id:'instalplus-praha',
+          name:'Instal+ Praha',
+          city:'Praha',
+          region:'Praha',
+          services:['Instalatér'],
+          rating:4.7,
+          responseMin: 60,
+          verified:false,
+          desc:'Havarijní výjezdy, bojler, ventily, tlak, opravy. Rychlé zásahy a přehledná cena práce.'
+        },
+        {
+          id:'officewater-ostrava',
+          name:'OfficeWater Ostrava',
+          city:'Ostrava',
+          region:'Moravskoslezský',
+          services:['Rozvoz vody'],
+          rating:4.5,
+          responseMin: 180,
+          verified:true,
+          desc:'Pravidelné i jednorázové rozvozy vody do kanceláří. Smluvní ceny, servis dávkovačů.'
+        },
+        {
+          id:'wellness-plzen',
+          name:'Wellness Pool Plzeň',
+          city:'Plzeň',
+          region:'Plzeňský',
+          services:['Bazén / Wellness'],
+          rating:4.4,
+          responseMin: 720,
+          verified:false,
+          desc:'Servis a údržba bazénů, chemie, zazimování, poradenství. Dlouhodobé servisní smlouvy.'
+        },
+        {
+          id:'aqua-olomouc',
+          name:'AquaCare Olomouc',
+          city:'Olomouc',
+          region:'Olomoucký',
+          services:['Filtrace vody','Instalatér'],
+          rating:4.3,
+          responseMin: 240,
+          verified:true,
+          desc:'Filtrace, změkčení, UV, a zároveň instalatérské služby. Ideální pro kompletní řešení v domě.'
+        },
+      ];
+    }
+
+    function seedFirms(){
+      const existing = readJSON(LS_FIRMS, []);
+      const merged = [...demoFirms(), ...existing.filter(e => !demoFirms().some(d => d.id === e.id))];
+      writeJSON(LS_FIRMS, merged);
+      toast('DEMO firmy nahrané');
+      render();
+    }
+
+    function clearFirms(){
+      if(!confirm('Opravdu smazat firmy?')) return;
+      writeJSON(LS_FIRMS, []);
+      toast('Firmy smazány');
+      render();
+    }
+
+    // ====== Filters & render ======
+    function getFilters(){
+      return {
+        q: document.getElementById('q').value.trim().toLowerCase(),
+        service: document.getElementById('fService').value,
+        region: document.getElementById('fRegion').value,
+        sort: document.getElementById('fSort').value,
+      };
+    }
+
+    function applyFilters(firms){
+      const {q, service, region, sort} = getFilters();
+      let out = [...firms];
+
+      if(service) out = out.filter(f => (f.services || []).includes(service));
+      if(region) out = out.filter(f => f.region === region);
+      if(q){
+        out = out.filter(f =>
+          String(f.name||'').toLowerCase().includes(q) ||
+          String(f.city||'').toLowerCase().includes(q) ||
+          String(f.region||'').toLowerCase().includes(q)
+        );
+      }
+
+      if(sort === 'rating') out.sort((a,b) => (b.rating||0) - (a.rating||0));
+      if(sort === 'fast') out.sort((a,b) => (a.responseMin||999999) - (b.responseMin||999999));
+      if(sort === 'name') out.sort((a,b) => String(a.name||'').localeCompare(String(b.name||''), 'cs'));
+
+      return out;
+    }
+
+    function serviceChip(service){
+      const map = {
+        'Rozbor vody': ['🧪', 'sRozbor'],
+        'Filtrace vody': ['💧', 'sFiltrace'],
+        'Bazén / Wellness': ['🏊', 'sBazen'],
+        'Instalatér': ['🔧', 'sInst'],
+        'Studna': ['🕳️', 'sStudna'],
+        'Rozvoz vody': ['🚚', 'sRozvoz'],
+      };
+      const [ico, cls] = map[service] || ['•',''];
+      return `<span class="chip ${cls}">${ico} ${service}</span>`;
+    }
+
+    function formatSla(min){
+      if(!min || min <= 0) return '—';
+      if(min < 60) return `${min} min`;
+      if(min < 24*60) return `${Math.round(min/60)} h`;
+      return `${Math.round(min/1440)} d`;
+    }
+
+    function updateKpis(){
+      const firms = readJSON(LS_FIRMS, []);
+      const view = applyFilters(firms);
+      const leads = readLeads();
+      document.getElementById('kFirm').textContent = String(firms.length);
+      document.getElementById('kView').textContent = String(view.length);
+      document.getElementById('kLeads').textContent = String(leads.length);
+    }
+
+    const grid = document.getElementById('grid');
+    function render(){
+      const firms = readJSON(LS_FIRMS, []);
+      const view = applyFilters(firms);
+      grid.innerHTML = '';
+
+      updateKpis();
+
+      if(view.length === 0){
+        grid.innerHTML = `<div class="panel" style="grid-column: 1 / -1;">
+          <div class="h1" style="font-size:18px; margin-bottom:6px">Nic nenalezeno</div>
+          <div class="lead">Klikni na <b>Nahrát DEMO firmy</b>, nebo zruš filtry.</div>
+        </div>`;
+        return;
+      }
+
+      for(const f of view){
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.innerHTML = `
+          <h3>${f.verified ? '✅ ' : ''}${f.name}</h3>
+          <p>${f.city} • ${f.region}</p>
+          <div class="row">${(f.services||[]).slice(0,3).map(serviceChip).join('')}</div>
+          <div class="row" style="margin-top:12px">
+            <span class="badge">⭐ ${Number(f.rating||0).toFixed(1)}/5</span>
+            <span class="badge">⏱ ${formatSla(f.responseMin)}</span>
+            <span class="badge">${f.verified ? 'Ověřená' : 'Neověřená'}</span>
+          </div>
+          <div class="mini" style="margin-top:10px">Klikni pro detail → poptávka přímo firmě</div>
+        `;
+        el.addEventListener('click', () => openFirm(f.id));
+        grid.appendChild(el);
+      }
+    }
+
+    // ====== Modal (firm detail + lead) ======
+    const overlay = document.getElementById('overlay');
+    let currentFirm = null;
+
+    function openFirm(id){
+      const firms = readJSON(LS_FIRMS, []);
+      currentFirm = firms.find(f => f.id === id) || null;
+      if(!currentFirm){ toast('Firma nenalezena'); return; }
+
+      document.getElementById('mName').textContent = currentFirm.name;
+      document.getElementById('mMeta').textContent = `${currentFirm.city} • ${currentFirm.region}`;
+      document.getElementById('mDesc').textContent = currentFirm.desc || '';
+      document.getElementById('mRating').textContent = Number(currentFirm.rating||0).toFixed(1);
+      document.getElementById('mSla').textContent = formatSla(currentFirm.responseMin);
+      document.getElementById('mVerify').textContent = currentFirm.verified ? 'ANO' : 'NE';
+
+      document.getElementById('mServices').innerHTML = (currentFirm.services||[]).map(serviceChip).join('');
+
+      // předvyplnění služby
+      const sel = document.getElementById('lService');
+      if((currentFirm.services||[]).includes(sel.value) === false && (currentFirm.services||[])[0]){
+        sel.value = currentFirm.services[0];
+      }
+
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden','false');
+      setTimeout(() => document.getElementById('lContact').focus(), 60);
+    }
+
+    function closeModal(){
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden','true');
+      currentFirm = null;
+    }
+
+    document.getElementById('btnClose').addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => { if(e.target === overlay) closeModal(); });
+    window.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+
+    document.getElementById('btnSend').addEventListener('click', () => {
+      if(!currentFirm){ toast('Chyba: žádná firma'); return; }
+      const ok = createLead({
+        service: document.getElementById('lService').value,
+        location: document.getElementById('lLocation').value,
+        contact: document.getElementById('lContact').value,
+        note: document.getElementById('lNote').value + (currentFirm ? `\n\n[Vybraná firma: ${currentFirm.name}]` : ''),
+        assignedFirm: { id: currentFirm.id, name: currentFirm.name }
+      });
+      if(ok){
+        document.getElementById('lLocation').value = '';
+        document.getElementById('lContact').value = '';
+        document.getElementById('lNote').value = '';
+        closeModal();
+      }
+    });
+
+    // ====== Buttons ======
+    document.getElementById('btnSeed').addEventListener('click', seedFirms);
+    document.getElementById('btnClear').addEventListener('click', clearFirms);
+    document.getElementById('btnReset').addEventListener('click', () => {
+      document.getElementById('q').value='';
+      document.getElementById('fService').value='';
+      document.getElementById('fRegion').value='';
+      document.getElementById('fSort').value='rating';
+      render();
+      toast('Filtry reset');
+    });
+
+    ['q','fService','fRegion','fSort'].forEach(id => {
+      document.getElementById(id).addEventListener('input', render);
+      document.getElementById(id).addEventListener('change', render);
+    });
+
+    // Init
+    // Sjednotit leady a kpis
+    readLeads();
+    render();
+  </script>
+</body>
+</html>
