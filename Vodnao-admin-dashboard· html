@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vodnao.cz – Admin Dashboard (Leady)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#020617;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.12);
+      --text:#ffffff;
+      --muted: rgba(255,255,255,0.7);
+      --muted2: rgba(255,255,255,0.55);
+      --accent:#0033FF;
+      --accent2:#977DFF;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --glow: 0 0 28px rgba(0,51,255,0.35);
+      --shadow: 0 18px 60px rgba(0,0,0,0.35);
+    }
+
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Roboto', system-ui, -apple-system, Segoe UI, Arial, sans-serif; }
+    html{ scroll-behavior:smooth; }
+    body{
+      background:
+        radial-gradient(circle at 18% 18%, rgba(0,51,255,0.22), transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(151,125,255,0.18), transparent 52%),
+        linear-gradient(135deg, var(--bg), #000 55%);
+      color: var(--text);
+      overflow-x:hidden;
+    }
+
+    .wrap{ max-width:1200px; margin:0 auto; padding: 0 18px; }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 14px 0;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .nav{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .brand{ display:flex; align-items:center; gap:10px; min-width: 180px; }
+    .logo{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,51,255,0.55), rgba(151,125,255,0.25));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: var(--glow);
+    }
+    .brand strong{ letter-spacing:0.25px; }
+    .brand .tag{ display:block; font-size:11px; color: var(--muted); margin-top:2px; }
+
+    .navLinks{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .navLinks a{
+      text-decoration:none;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      transition: .18s ease;
+    }
+    .navLinks a:hover{ color: var(--text); border-color: rgba(255,255,255,0.10); background: rgba(255,255,255,0.03); }
+
+    .btn{
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 11px 14px;
+      font-size: 13px;
+      cursor:pointer;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: var(--glow); border-color: rgba(151,125,255,0.35); }
+    .btn:active{ transform: translateY(0) scale(0.99); }
+    .btnPrimary{ background: linear-gradient(135deg, rgba(0,51,255,0.35), rgba(151,125,255,0.18)); }
+    .btnGhost{ background: rgba(255,255,255,0.03); }
+    .btnDanger{ background: rgba(239,68,68,0.14); border-color: rgba(239,68,68,0.35); }
+
+    main{ padding: 18px 0 34px; }
+
+    .panel{
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      background: rgba(0,0,0,0.22);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+
+    .topGrid{ display:grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; align-items:stretch; }
+    @media (max-width: 980px){ .topGrid{ grid-template-columns: 1fr; } }
+
+    .h1{ font-size: 16px; color: rgba(255,255,255,0.92); letter-spacing:0.2px; margin-bottom: 8px; }
+    .muted{ color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+    .kpis{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 10px; }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+      padding: 8px 10px;
+      border-radius: 999px;
+      white-space:nowrap;
+    }
+
+    .filters{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    input[type="search"], select{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      padding: 11px 12px;
+      font-size: 13px;
+      outline:none;
+    }
+    input[type="search"]{ min-width: 260px; width: min(520px, 100%); }
+
+    .tableWrap{
+      margin-top: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      border-radius: 18px;
+      overflow:hidden;
+    }
+
+    table{ width:100%; border-collapse:collapse; }
+    thead th{
+      text-align:left;
+      font-size: 12px;
+      color: rgba(255,255,255,0.86);
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,51,255,0.14);
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(10px);
+      z-index: 2;
+    }
+    tbody td{
+      padding: 12px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.86);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      vertical-align: top;
+    }
+    tbody tr{
+      cursor:pointer;
+      transition: .14s ease;
+    }
+    tbody tr:hover{ background: rgba(255,255,255,0.04); }
+
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.18);
+      white-space:nowrap;
+    }
+    .sNew{ border-color: rgba(245,158,11,0.35); color: rgba(245,158,11,0.95); background: rgba(245,158,11,0.08); }
+    .sDone{ border-color: rgba(34,197,94,0.35); color: rgba(34,197,94,0.95); background: rgba(34,197,94,0.08); }
+    .sArch{ border-color: rgba(148,163,184,0.35); color: rgba(148,163,184,0.95); background: rgba(148,163,184,0.08); }
+
+    .rowActions{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    .miniBtn{
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.9);
+      padding: 7px 9px;
+      font-size: 12px;
+      cursor:pointer;
+      transition: .15s ease;
+      white-space:nowrap;
+    }
+    .miniBtn:hover{ box-shadow: var(--glow); border-color: rgba(151,125,255,0.35); transform: translateY(-1px); }
+    .miniDanger{ background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.35); }
+
+    .empty{
+      padding: 12px;
+      border: 1px dashed rgba(255,255,255,0.18);
+      border-radius: 18px;
+      background: rgba(0,0,0,0.16);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      margin-top: 12px;
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      max-width: min(420px, calc(100vw - 36px));
+      padding: 12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--glow);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events:none;
+      transition: .25s ease;
+      color: rgba(255,255,255,0.92);
+      font-size:13px;
+      z-index: 999;
+    }
+    .toast.show{ opacity:1; transform: translateY(0px); }
+
+    /* Responsive table (mobile) */
+    @media (max-width: 860px){
+      thead{ display:none; }
+      table, tbody, tr, td{ display:block; width:100%; }
+      tbody tr{ border-bottom: 1px solid rgba(255,255,255,0.10); }
+      tbody td{ border: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      tbody td[data-label]::before{
+        content: attr(data-label);
+        display:block;
+        color: var(--muted2);
+        font-size: 11px;
+        margin-bottom: 6px;
+      }
+      .rowActions{ justify-content:flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <strong>Vodnao.cz</strong>
+            <span class="tag">Admin • leady • filtry • export • detail</span>
+          </div>
+        </div>
+
+        <div class="navLinks">
+          <a href="vodnao-index.html">Domů</a>
+          <a href="vodnao-firmy.html">Firmy</a>
+          <a href="vodnao-lead-detail.html">Detail</a>
+          <button class="btn btnGhost" id="btnSeed">Nahrát DEMO leady</button>
+          <button class="btn btnPrimary" id="btnExport">Export CSV</button>
+          <button class="btn btnDanger" id="btnClear">Smazat vše</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <div class="topGrid">
+      <section class="panel">
+        <div class="h1">Leady</div>
+        <div class="muted">Klik na řádek otevře detail leadu. Stav měníš tlačítky v řádku nebo přes detail. V MVP běží vše v <span class="mono">localStorage</span>.</div>
+
+        <div class="kpis">
+          <span class="badge">Celkem: <b id="kAll">0</b></span>
+          <span class="badge">Nové: <b id="kNew">0</b></span>
+          <span class="badge">Hotové: <b id="kDone">0</b></span>
+          <span class="badge">Archiv: <b id="kArch">0</b></span>
+          <span class="badge">Dnes: <b id="kToday">0</b></span>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="h1">Filtry</div>
+        <div class="filters" style="margin-top:10px">
+          <input id="q" type="search" placeholder="Hledat (kontakt / lokalita / firma / popis)…" />
+          <select id="fStatus">
+            <option value="">Stav: všechny</option>
+            <option value="new">Nové</option>
+            <option value="done">Hotové</option>
+            <option value="archived">Archiv</option>
+          </select>
+          <select id="fService">
+            <option value="">Služba: všechny</option>
+            <option>Rozbor vody</option>
+            <option>Filtrace vody</option>
+            <option>Bazén / Wellness</option>
+            <option>Instalatér</option>
+            <option>Studna</option>
+            <option>Rozvoz vody</option>
+          </select>
+          <select id="fSort">
+            <option value="newest">Řazení: nejnovější</option>
+            <option value="oldest">Řazení: nejstarší</option>
+          </select>
+          <button class="btn btnGhost" id="btnReset">Reset</button>
+        </div>
+
+        <div class="kpis" style="margin-top:12px">
+          <span class="badge">Zobrazeno: <b id="kView">0</b></span>
+          <span class="badge">Klik = otevře detail</span>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel" style="margin-top:12px">
+      <div class="h1">Tabulka</div>
+      <div class="muted">Tip: Lead s přiřazenou firmou je vidět ve sloupci <b>Firma</b>. Interní poznámka = ikona 📝.</div>
+
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Stav</th>
+              <th>Služba</th>
+              <th>Lokalita</th>
+              <th>Kontakt</th>
+              <th>Firma</th>
+              <th>Vytvořeno</th>
+              <th>Lead ID</th>
+              <th style="text-align:right">Akce</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="empty" id="empty" style="display:none">Žádné leady. Vytvoř poptávku na <b>vodnao-index.html</b> nebo klikni <b>Nahrát DEMO leady</b>.</div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const LS_LEADS = 'vodnao_leads';
+
+    function toast(msg){
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(() => el.classList.remove('show'), 2200);
+    }
+
+    function normalizeLeads(raw){
+      const now = Date.now();
+      return (Array.isArray(raw) ? raw : []).map((l, i) => {
+        const createdAt = (typeof l.createdAt === 'number') ? l.createdAt : now - (raw.length - i) * 60000;
+        const status = (l.status === 'done' || l.status === 'archived' || l.status === 'new') ? l.status : 'new';
+        const dateStr = (typeof l.date === 'string' && l.date.trim()) ? l.date : new Date(createdAt).toLocaleString('cs-CZ');
+        return {
+          service: String(l.service || 'Rozbor vody'),
+          location: String(l.location || ''),
+          contact: String(l.contact || ''),
+          note: String(l.note || ''),
+          date: dateStr,
+          status,
+          createdAt,
+          assignedFirmId: (typeof l.assignedFirmId === 'string') ? l.assignedFirmId : '',
+          assignedFirmName: (typeof l.assignedFirmName === 'string') ? l.assignedFirmName : '',
+          internalNote: (typeof l.internalNote === 'string') ? l.internalNote : '',
+          audit: Array.isArray(l.audit) ? l.audit : [],
+        };
+      });
+    }
+
+    function readLeads(){
+      const raw = JSON.parse(localStorage.getItem(LS_LEADS) || '[]');
+      const norm = normalizeLeads(raw);
+      localStorage.setItem(LS_LEADS, JSON.stringify(norm));
+      return norm;
+    }
+
+    function writeLeads(leads){
+      localStorage.setItem(LS_LEADS, JSON.stringify(leads));
+    }
+
+    function leadId(l){
+      const base = `${l.createdAt}|${l.contact}|${l.service}`;
+      let h = 0;
+      for(let i=0;i<base.length;i++){ h = ((h<<5)-h) + base.charCodeAt(i); h |= 0; }
+      return `L-${l.createdAt}-${Math.abs(h)}`;
+    }
+
+    function auditPush(leads, idx, action, meta){
+      const ts = Date.now();
+      const entry = { ts, action, meta: meta || '' };
+      leads[idx].audit = Array.isArray(leads[idx].audit) ? leads[idx].audit : [];
+      leads[idx].audit.unshift(entry);
+    }
+
+    function badgeFor(status){
+      if(status === 'done') return { cls:'status sDone', text:'✔ Hotové' };
+      if(status === 'archived') return { cls:'status sArch', text:'⧉ Archiv' };
+      return { cls:'status sNew', text:'● Nové' };
+    }
+
+    function escapeHtml(s){
+      return String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+    }
+
+    function getFilters(){
+      return {
+        q: document.getElementById('q').value.trim().toLowerCase(),
+        status: document.getElementById('fStatus').value,
+        service: document.getElementById('fService').value,
+        sort: document.getElementById('fSort').value,
+      };
+    }
+
+    function applyFilters(leads){
+      const {q, status, service, sort} = getFilters();
+      let out = [...leads];
+      if(status) out = out.filter(l => l.status === status);
+      if(service) out = out.filter(l => l.service === service);
+      if(q){
+        out = out.filter(l =>
+          (l.contact||'').toLowerCase().includes(q) ||
+          (l.location||'').toLowerCase().includes(q) ||
+          (l.note||'').toLowerCase().includes(q) ||
+          (l.assignedFirmName||'').toLowerCase().includes(q)
+        );
+      }
+      if(sort === 'newest') out.sort((a,b) => b.createdAt - a.createdAt);
+      if(sort === 'oldest') out.sort((a,b) => a.createdAt - b.createdAt);
+      return out;
+    }
+
+    function updateKpis(leads){
+      const all = leads.length;
+      const nNew = leads.filter(l => l.status === 'new').length;
+      const nDone = leads.filter(l => l.status === 'done').length;
+      const nArch = leads.filter(l => l.status === 'archived').length;
+
+      const startOfDay = new Date();
+      startOfDay.setHours(0,0,0,0);
+      const today = leads.filter(l => l.createdAt >= startOfDay.getTime()).length;
+
+      document.getElementById('kAll').textContent = String(all);
+      document.getElementById('kNew').textContent = String(nNew);
+      document.getElementById('kDone').textContent = String(nDone);
+      document.getElementById('kArch').textContent = String(nArch);
+      document.getElementById('kToday').textContent = String(today);
+    }
+
+    function openDetailByLead(lead){
+      const id = leadId(lead);
+      window.location.href = `vodnao-lead-detail.html?id=${encodeURIComponent(id)}`;
+    }
+
+    function setStatusById(id, status){
+      const leads = readLeads();
+      const idx = leads.findIndex(l => leadId(l) === id);
+      if(idx === -1){ toast('Lead nenalezen'); return; }
+      const prev = leads[idx].status;
+      leads[idx].status = status;
+      auditPush(leads, idx, 'STATUS', `${prev} → ${status}`);
+      writeLeads(leads);
+      toast(status === 'done' ? 'Označeno jako hotové' : 'Přesunuto do archivu');
+      render();
+    }
+
+    function deleteById(id){
+      if(!confirm('Opravdu smazat tento lead?')) return;
+      const leads = readLeads();
+      const idx = leads.findIndex(l => leadId(l) === id);
+      if(idx === -1){ toast('Lead nenalezen'); return; }
+      leads.splice(idx,1);
+      writeLeads(leads);
+      toast('Lead smazán');
+      render();
+    }
+
+    function render(){
+      const all = readLeads();
+      updateKpis(all);
+
+      const view = applyFilters(all);
+      document.getElementById('kView').textContent = String(view.length);
+
+      const tbody = document.getElementById('tbody');
+      const empty = document.getElementById('empty');
+      tbody.innerHTML = '';
+
+      if(view.length === 0){
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      for(const lead of view){
+        const id = leadId(lead);
+        const b = badgeFor(lead.status);
+        const tr = document.createElement('tr');
+
+        const noteIcon = (lead.internalNote && lead.internalNote.trim()) ? '📝' : '';
+        const firm = (lead.assignedFirmName || '').trim();
+
+        tr.innerHTML = `
+          <td data-label="Stav"><span class="${b.cls}">${b.text}</span></td>
+          <td data-label="Služba">${escapeHtml(lead.service)} ${noteIcon ? `<span title="Má interní poznámku">${noteIcon}</span>` : ''}</td>
+          <td data-label="Lokalita">${escapeHtml(lead.location || '—')}</td>
+          <td data-label="Kontakt">${escapeHtml(lead.contact || '—')}</td>
+          <td data-label="Firma">${firm ? `<b>${escapeHtml(firm)}</b>` : '<span style="color:var(--muted2)">—</span>'}</td>
+          <td data-label="Vytvořeno">${escapeHtml(new Date(lead.createdAt).toLocaleString('cs-CZ'))}</td>
+          <td data-label="Lead ID" class="mono">${escapeHtml(id)}</td>
+          <td data-label="Akce" style="text-align:right">
+            <div class="rowActions">
+              <button class="miniBtn" data-action="detail" data-id="${escapeHtml(id)}">Detail</button>
+              <button class="miniBtn" data-action="done" data-id="${escapeHtml(id)}">✔</button>
+              <button class="miniBtn" data-action="arch" data-id="${escapeHtml(id)}">⧉</button>
+              <button class="miniBtn miniDanger" data-action="del" data-id="${escapeHtml(id)}">Smazat</button>
+            </div>
+          </td>
+        `;
+
+        // Klik na řádek = detail (kromě kliknutí na tlačítko)
+        tr.addEventListener('click', (e) => {
+          const btn = e.target.closest('button');
+          if(btn) return;
+          openDetailByLead(lead);
+        });
+
+        tbody.appendChild(tr);
+      }
+
+      // Delegace akcí
+      tbody.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const action = btn.getAttribute('data-action');
+          const id = btn.getAttribute('data-id');
+          if(action === 'detail'){
+            window.location.href = `vodnao-lead-detail.html?id=${encodeURIComponent(id)}`;
+            return;
+          }
+          if(action === 'done') return setStatusById(id, 'done');
+          if(action === 'arch') return setStatusById(id, 'archived');
+          if(action === 'del') return deleteById(id);
+        });
+      });
+    }
+
+    // ===== CSV export (aktuální filtrování) =====
+    function exportCsv(){
+      const all = readLeads();
+      const view = applyFilters(all);
+      if(view.length === 0){ toast('Není co exportovat'); return; }
+
+      const rows = view.map(l => ({
+        id: leadId(l),
+        status: l.status,
+        service: l.service,
+        location: l.location,
+        contact: l.contact,
+        assignedFirm: l.assignedFirmName || '',
+        createdAt: new Date(l.createdAt).toISOString(),
+        note: (l.note || '').replaceAll('\n',' '),
+      }));
+
+      const headers = Object.keys(rows[0]);
+      const esc = (v) => {
+        const s = String(v ?? '');
+        const needs = /[",\n;]/.test(s);
+        const out = s.replaceAll('"','""');
+        return needs ? `"${out}"` : out;
+      };
+
+      const csv = [headers.join(';'), ...rows.map(r => headers.map(h => esc(r[h])).join(';'))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `vodnao-leads-${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast('Export hotový');
+    }
+
+    // ===== Demo seed =====
+    function seedDemo(){
+      const now = Date.now();
+      const demo = [
+        { service:'Rozbor vody', location:'Brno', contact:'test@vodnao.cz', note:'Studna – podezření na železo, prosím rozbor + doporučení filtrace.' },
+        { service:'Filtrace vody', location:'Uherské Hradiště', contact:'+420 777 123 456', note:'Chci filtr do domu, tvrdá voda, kalkulace + montáž.', assignedFirmName:'HydroPro Brno' },
+        { service:'Instalatér', location:'Praha', contact:'petr.novak@email.cz', note:'Protéká ventil u bojleru, potřebuji servis co nejdřív.' },
+        { service:'Studna', location:'Zlín', contact:'+420 604 222 111', note:'Nová vrtaná studna – cenová nabídka vč. povolení.', status:'done' },
+        { service:'Rozvoz vody', location:'Ostrava', contact:'firma@xyz.cz', note:'Pravidelný rozvoz barelové vody do kanceláře.', status:'archived' },
+      ].map((d, i) => ({
+        service: d.service,
+        location: d.location,
+        contact: d.contact,
+        note: d.note,
+        date: new Date(now - (i * 3 + 1) * 60 * 60 * 1000).toLocaleString('cs-CZ'),
+        createdAt: now - (i * 3 + 1) * 60 * 60 * 1000,
+        status: d.status || 'new',
+        assignedFirmId: '',
+        assignedFirmName: d.assignedFirmName || '',
+        internalNote: '',
+        audit: [ { ts: now - (i * 3 + 1) * 60 * 60 * 1000, action:'CREATE', meta:'Lead vytvořen (demo)' } ],
+      }));
+
+      const existing = readLeads();
+      writeLeads([...demo, ...existing]);
+      toast('DEMO leady nahrané');
+      render();
+    }
+
+    function clearAll(){
+      if(!confirm('Opravdu smazat VŠECHNY leady?')) return;
+      writeLeads([]);
+      toast('Leady smazány');
+      render();
+    }
+
+    function resetFilters(){
+      document.getElementById('q').value='';
+      document.getElementById('fStatus').value='';
+      document.getElementById('fService').value='';
+      document.getElementById('fSort').value='newest';
+      toast('Filtry reset');
+      render();
+    }
+
+    // Wiring
+    document.getElementById('btnExport').addEventListener('click', exportCsv);
+    document.getElementById('btnSeed').addEventListener('click', seedDemo);
+    document.getElementById('btnClear').addEventListener('click', clearAll);
+    document.getElementById('btnReset').addEventListener('click', resetFilters);
+
+    ['q','fStatus','fService','fSort'].forEach(id => {
+      document.getElementById(id).addEventListener('input', render);
+      document.getElementById(id).addEventListener('change', render);
+    });
+
+    // Init
+    readLeads();
+    render();
+  </script>
+</body>
+</html>
